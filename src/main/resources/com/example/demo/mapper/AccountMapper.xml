@@ -3,19 +3,47 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.AccountMapper">
-	<!-- ログイン情報の取得 -->
-    <insert id="insertNewAccount">
-        INSERT INTO tbl_account
+	<!-- アカウント情報の取得 -->
+	<select id="findByEmail" resultType="com.example.demo.entity.Account" >
+		SELECT account_id,mail,pass FROM users WHERE mail = #{mail, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 新規アカウント情報の登録 -->
+    <insert id="insertNewAccount" useGeneratedKeys="true" keyProperty="account_id">
+        INSERT INTO users
         (
-        	account_id,
         	mail,
         	pass
         ) 
         VALUES 
         (
-        	#{id},
-        	#{email, jdbcType=VARCHAR},
-        	#{password, jdbcType=VARCHAR}
+        	#{mail, jdbcType=VARCHAR},
+        	#{pass, jdbcType=VARCHAR}
         )
+    </insert>
+    
+    <!-- 新規アカウントのユーザー情報の登録 -->
+    <insert id="insertUserDetail">
+    	INSERT INTO tbl_user_detail
+    	(
+			account_id,
+			name,
+			gender,
+			postal_number,
+			prefecture,
+			address,
+			building
+    	)
+    	VALUES
+    	(
+    		#{accountId},
+    		#{name},
+    		#{gender},
+    		#{postalNumber, jdbcType=INTEGER},
+    		#{prefecture, jdbcType=VARCHAR},
+    		#{address, jdbcType=VARCHAR},
+    		#{building, jdbcType=VARCHAR}
+    	)
+    	
     </insert>
 </mapper>
